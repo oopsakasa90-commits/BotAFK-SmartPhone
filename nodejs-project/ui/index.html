@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; media-src 'self' https://translate.google.com" />
+  <title>Secret-AF</title>
+  <link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="mobile.css" />
+<meta name="theme-color" content="#0d1220" />
+<link rel="manifest" href="manifest.json" />
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+  <canvas id="fx-bg" aria-hidden="true"></canvas>
+  <!-- Màn hình đăng nhập tài khoản phần mềm -->
+  <section id="login" class="screen">
+    <div class="login-card">
+      <div class="logo"><img class="app-logo" src="logo.png" alt="" onerror="this.remove()">Secret-AF</div>
+      <p class="muted">Đăng nhập tài khoản phần mềm do quản trị viên cấp</p>
+      <form id="login-form">
+        <label>Tài khoản phần mềm<input id="lic-user" autocomplete="username" required /></label>
+        <label>Mật khẩu phần mềm<input id="lic-pass" type="password" autocomplete="current-password" required /></label>
+        <button class="btn primary wide" type="submit">Đăng nhập</button>
+        <div id="login-msg" class="msg"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Màn hình chính -->
+  <section id="main" class="screen hidden">
+    <header class="topbar">
+      <div class="brand"><img class="app-logo" src="logo.png" alt="" onerror="this.remove()">Secret-AF</div>
+      <div id="lic-info" class="lic-info"></div>
+      <div class="spacer"></div>
+      <button id="btn-settings" class="btn ghost icon-btn" title="Cài đặt" aria-label="Cài đặt"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+      <button id="btn-add" class="btn primary">+ Thêm acc</button>
+      <button id="btn-logout" class="btn logout">Đăng xuất</button>
+    </header>
+    <div id="bridge-banner" class="bridge-banner hidden" role="status"></div>
+
+    <div class="body">
+      <!-- Cột chức năng bên trái: bấm trái để bật/tắt, bấm phải để cài đặt -->
+      <aside id="sidebar" class="sidebar">
+        <div class="side-title">Chức năng</div>
+        <div id="side-empty" class="side-empty muted">Chọn một acc để dùng chức năng.</div>
+        <div id="side-buttons" class="side-buttons hidden">
+          <button class="fn" data-fn="sell" title="Bấm để bật/tắt">Sell spawner</button>
+          <button class="fn" data-fn="autofarm" hidden>Autofarm</button>
+          <button class="fn" data-fn="automine" hidden>Automine</button>
+          <button class="fn" data-fn="autoquest" title="Chuột trái: bật/tắt · Chuột phải: cài đặt">Autoquest</button>
+          <button class="fx-fn" id="fx-mine" data-fx="mine" title="Chuột trái: bật/tắt · Chuột phải: cài đặt">Automine</button>
+          <button class="fx-fn" id="fx-fight" data-fx="fight" title="Chuột trái: bật/tắt · Chuột phải: cài đặt">Fightbot</button>
+          <button class="fx-fn" id="fx-cui" data-fx="cui" title="Click UI: mở cửa sổ rương/menu/dân làng, click ô, ghi và phát lại">Click UI</button>
+          <button class="fx-fn" id="fx-esp" hidden data-fx="esp" title="Mở/đóng radar ESP: xanh = bạn bè, vàng = chưa add">ESP</button>
+          <button class="fn" data-fn="autoeat" title="Bấm để bật/tắt">Auto eat</button>
+          <button class="fn" data-fn="console" title="Mở/đóng cửa sổ console">Console</button>
+          <button class="fn" data-fn="help" title="Bấm trái hoặc phải: mở hướng dẫn">Help</button>
+        </div>
+      </aside>
+
+      <div class="main-area">
+        <main class="content">
+          <div id="cards" class="cards"></div>
+          <div id="empty" class="empty hidden">Chưa có acc nào. Bấm “+ Thêm acc” để thêm acc game.</div>
+        </main>
+
+        <section id="console-panel" class="console-panel hidden">
+          <div class="console-head">
+            <span class="muted">Console của:</span>
+            <strong id="console-target">chưa chọn acc</strong>
+          </div>
+          <div id="logs" class="logs"></div>
+          <form id="cmd-form" class="cmd-form">
+            <input id="cmd-input" placeholder="Gõ chữ để chat, /lệnh để chạy lệnh, !lệnh để điều khiển bot" autocomplete="off" />
+            <button class="btn primary" type="submit">Gửi</button>
+          </form>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cài đặt: Key, Giao diện, Liquid, Cập nhật -->
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal-card settings-card">
+      <h3>Cài đặt</h3>
+
+      <div class="set-section">
+        <div class="sub-title">Giao diện</div>
+        <div class="set-row">
+          <div class="set-text"><b>Màu sắc và nền</b><span class="muted">Màu chính, màu phụ, cầu vồng, nền</span></div>
+          <button id="btn-theme" class="btn ghost" type="button">Tùy chỉnh</button>
+        </div>
+        <label class="check set-switch"><span class="set-text"><b>Liquid</b><span class="muted">Trong suốt thật, nhìn xuyên thấy cửa sổ phía sau (Windows 11)</span></span><input id="fx-liquid" type="checkbox" /></label>
+        <div id="fx-liquid-row" class="theme-row hidden"><span>Độ trong suốt <b id="fx-liquid-val"></b></span><input id="fx-liquid-amt" type="range" min="10" max="90" step="5" value="45" /></div>
+        <label class="check set-switch"><span class="set-text"><b>Hiệu ứng động</b><span class="muted">Hạt nổi, aurora, chuyển động. Tắt đi để app nhẹ hơn</span></span><input id="fx-anim" type="checkbox" checked /></label>
+      </div>
+
+      <div class="set-section">
+        <div class="sub-title">Anti drop 100%</div>
+        <label>Whitelist item không bao giờ vứt/cất (cách nhau dấu phẩy) <input id="set-antidrop" placeholder="vd: blaze_rod, diamond" autocomplete="off" spellcheck="false" /></label>
+        <span class="muted">Áp dụng cho Automine (cất /pv, trade). Item trong danh sách luôn được giữ lại trong túi.</span>
+      </div>
+
+      <div class="set-section">
+        <div class="sub-title">Bản quyền</div>
+        <div id="key-box" class="key-box">
+          <div class="side-title">Key</div>
+          <div id="key-status" class="muted">Chưa có key.</div>
+          <input id="key-input" class="key-input" placeholder="Nhập key" autocomplete="off" spellcheck="false" />
+          <button id="btn-key" class="btn primary">Kích hoạt</button>
+        </div>
+      </div>
+
+      <div class="set-section">
+        <div class="sub-title">Phần mềm</div>
+        <div class="set-row">
+          <div class="set-text"><b>Cập nhật</b><span class="muted">Kiểm tra và cài bản mới nhất</span></div>
+          <button id="btn-update" class="btn ghost" type="button">Kiểm tra</button>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" data-close="settings-modal" class="btn primary">Xong</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hộp thoại thêm/sửa acc -->
+  <div id="modal" class="modal hidden">
+    <form id="acc-form" class="modal-card">
+      <h3 id="modal-title">Thêm acc game</h3>
+      <label>Tên hiển thị<input name="label" placeholder="Acc farm 1" /></label>
+      <div class="row">
+        <label class="grow">IP server<input name="host" placeholder="mairap.xyz" required /></label>
+        <label class="small">Port<input name="port" type="number" value="25565" /></label>
+      </div>
+      <label>Tên bot<input name="username" required /></label>
+      <label>Mật khẩu game <span class="muted">(để trống khi sửa nếu giữ nguyên)</span><input name="password" type="password" /></label>
+      <label>Kiểu đăng nhập <span class="muted">(Register rồi login hoặc chỉ login)</span>
+        <select name="authmode">
+          <option value="auto">Tự nhận theo server (mặc định)</option>
+          <option value="register">Register rồi login</option>
+          <option value="login">Chỉ login</option>
+        </select>
+      </label>
+      <label>Phiên bản <span class="muted">(để trống = tự dò)</span><input name="version" placeholder="26.1" /></label>
+      <label>Proxy HTTP <span class="muted">(host:port:user:pass, để trống nếu không dùng)</span><input name="proxy" placeholder="1.2.3.4:8080:user:pass" /></label>
+      <div id="acc-msg" class="msg"></div>
+      <div class="modal-actions">
+        <button type="button" id="acc-check-proxy" class="btn ghost">Dò proxy</button>
+        <button type="button" id="acc-cancel" class="btn ghost">Hủy</button>
+        <button type="submit" class="btn primary">Lưu</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Cài đặt Autoquest -->
+  <div id="quest-modal" class="modal hidden">
+    <div class="modal-card">
+      <h3>Cài đặt Autoquest</h3>
+      <div class="sub-title">Độ khó (chỉ chọn một)</div>
+      <label class="check"><span>Nhiệm vụ dễ (len xanh)</span><input type="radio" name="qdiff" value="easy" /></label>
+      <label class="check"><span>Nhiệm vụ thường (len vàng)</span><input type="radio" name="qdiff" value="normal" /></label>
+      <label>Số nhiệm vụ hoàn thành (1–10, mặc định 5) <input id="q-target" type="number" min="1" max="10" value="5" /></label>
+      <div id="q-msg" class="msg"></div>
+      <div class="modal-actions">
+        <button type="button" data-close="quest-modal" class="btn ghost">Hủy</button>
+        <button type="button" id="q-apply" class="btn primary">Áp dụng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cài đặt Fightbot -->
+  <div id="fight-modal" class="modal hidden">
+    <div class="modal-card wide-card fight-card">
+      <h3>Cài đặt Fightbot</h3>
+      <div class="sub-title">Warp</div>
+      <div class="row">
+        <select id="fight-warp" class="grow">
+          <option value="tuonglai">warp tuonglai</option>
+        </select>
+        <input id="fight-warpcmd" class="grow" placeholder="Lệnh warp (để trống = mặc định)" autocomplete="off" />
+      </div>
+      <div class="muted cell-file-hint">Sau khi qua warp bot nhấn Shift 3 lần rồi mới bắt đầu. Chức năng bên dưới thay đổi theo warp đã chọn.</div>
+
+      <div id="sec-tuonglai" class="fight-sec">
+        <div class="sub-title">Warp tuonglai: đi tới các tọa độ</div>
+        <div class="muted cell-file-hint">Bot lần lượt đi tới từng tọa độ, đứng đó đi lại trong bán kính bên dưới đến hết thời gian rồi sang tọa độ kế, hết vòng thì lặp lại. Chết thì /warp tuonglai lại và đi lại từ tọa độ đầu.</div>
+        <div id="fight-points" class="pts"></div>
+        <div class="row">
+          <button type="button" id="fight-addpoint" class="btn ghost">+ Thêm tọa độ</button>
+          <button type="button" id="fight-getpos" class="btn ghost" title="Điền vị trí hiện tại của bot vào dòng mới">Lấy vị trí bot</button>
+          <label class="inline">Bán kính (1–5) <input id="fight-pradius" type="number" min="1" max="5" value="5" /></label>
+        </div>
+        <div class="sub-title">Đối tượng bot đánh khi gặp</div>
+        <label>Loại
+          <select id="fight-scope">
+            <option value="npc">NPC (ping 0 hoặc không có trong tab)</option>
+            <option value="all">Mọi người chơi (trừ bạn bè)</option>
+          </select>
+        </label>
+        <div class="muted cell-file-hint">NPC đã <b>!addfriend</b> (ESP <b class="c-green">xanh</b>) không bao giờ bị đánh, chỉ đánh NPC ESP <b class="c-yellow">vàng</b>. Danh sách tên bên dưới để trống = đánh mọi NPC chưa kết bạn.</div>
+        <div id="fight-list" class="pick-list cell-list"></div>
+        <div class="row">
+          <input id="fight-custom" placeholder="Thêm tên, mẫu có § dùng * thay 1 ký tự: §L§D§*§*§*§r" class="grow" autocomplete="off" />
+          <button type="button" id="fight-add" class="btn ghost">Thêm</button>
+        </div>
+        <div class="row cell-file-row">
+          <button type="button" id="fight-import" class="btn ghost">Nhập từ file .txt</button>
+          <button type="button" id="fight-clear" class="btn ghost danger">Xóa hết</button>
+          <input id="fight-file" type="file" accept=".txt,text/plain" hidden />
+        </div>
+        <label>Tầm nhận mục tiêu (block, 8–100) <input id="fight-radius" type="number" min="8" max="100" value="48" /></label>
+      </div>
+
+      <div id="sec-halloween" class="fight-sec hidden">
+        <div class="sub-title">Warp halloween</div>
+        <div class="muted cell-file-hint">Sau warp: Shift 3 lần, /ditheo, rồi tự aim và đi tới các mob gần nhất. Không bao giờ nhắm player/NPC player. Chết thì /back.</div>
+        <label>Mob cần đánh (cách nhau bằng dấu phẩy) <input id="fight-hmobs" value="zombie, vex" autocomplete="off" /></label>
+        <div class="muted cell-file-hint">zombie = zombie, vex = hồn ma bay. Có thể thêm tên mob/tên hiển thị khác.</div>
+      </div>
+
+      <div id="sec-farmvip" class="fight-sec hidden">
+        <div class="sub-title">Warp farmvip</div>
+        <div class="muted cell-file-hint">Chọn một hoặc cả hai chức năng con. Chết thì /back.</div>
+        <label class="check"><span>Đánh con warden gần nhất</span><input id="fight-vwarden" type="checkbox" checked /></label>
+        <label class="check"><span>/ditheo để đệ tử đánh</span><input id="fight-vditheo" type="checkbox" /></label>
+      </div>
+
+      <div class="sub-title">Cơ chế đánh</div>
+      <label>Chọn một
+        <select id="fight-mode">
+          <option value="server">/autoattack của server</option>
+          <option value="aura">Aura / tự đánh của Fightbot</option>
+        </select>
+      </label>
+      <div id="fight-modehint" class="muted cell-file-hint">Bot gửi /autoattack tới khi thấy "[Tự Đánh] Đã BẬT". Khi chết và /back (hoặc /warp) thì bật lại.</div>
+      <div id="fight-aura" class="fight-sec hidden">
+        <label>CPS (0.5–20, mặc định 1.6 = tốc đánh vanilla) <input id="fight-cps" type="number" min="0.5" max="20" step="0.1" value="1.6" /></label>
+        <label>Số mục tiêu cùng lúc (1–3) <input id="fight-targets" type="number" min="1" max="3" value="3" /></label>
+        <label>Tầm đánh (1–4 block) <input id="fight-reach" type="number" min="1" max="4" step="0.1" value="4" /></label>
+        <div class="muted cell-file-hint">Đầu bot xoay mượt theo mục tiêu, mỗi tick 50ms (đồng bộ 20 TPS), nhìn rồi mới đánh ở tick kế tiếp để tránh bị kick.</div>
+      </div>
+
+      <div class="sub-title">Vàng</div>
+      <label class="check"><span>Dùng gold_ingot (chuột phải) khi có trong túi, hết thì cầm kiếm</span><input id="fight-gold" type="checkbox" checked /></label>
+      <label>CPS dùng vàng (1–25) <input id="fight-gcps" type="number" min="1" max="25" value="5" /></label>
+
+      <div id="fight-msg" class="msg"></div>
+      <div class="modal-actions">
+        <button type="button" id="fight-friends" class="btn ghost" title="In danh sách bạn bè ra console">Xem bạn bè</button>
+        <button type="button" data-close="fight-modal" class="btn ghost">Hủy</button>
+        <button type="button" id="fight-apply" class="btn primary">Áp dụng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cài đặt Automine (bản làm lại) -->
+  <div id="amine-modal" class="modal hidden">
+    <div class="modal-card wide-card fight-card">
+      <h3>Cài đặt Automine</h3>
+      <div class="muted cell-file-hint">Khi bật: /spawn, đợi vài giây, đi qua các tọa độ (một lượt), rồi đào mọi block trong vùng hộp từ lớp trên xuống. Túi đầy thì trade dân làng gần nhất rồi cất đồ vào /pv, chỉ giữ kiếm và cúp.</div>
+      <label>Chế độ
+        <select id="am-mode"><option value="area">1. Đào vùng (như hiện tại)</option><option value="nuker">2. Nuker (đào quanh bot)</option></select>
+      </label>
+      <label>Đợi sau /spawn (giây) <input id="am-wait" type="number" min="0" max="120" value="10" /></label>
+
+      <div id="am-nuker" class="hidden">
+        <div class="sub-title">Nuker</div>
+        <label>Shape <select id="nk-shape"><option value="cube">Cube</option><option value="sphere">Sphere</option><option value="uniform">Uniform</option></select></label>
+        <label>Mode <select id="nk-mode"><option value="all">All</option><option value="flatten">Flatten</option></select></label>
+        <div class="box-grid">
+          <span>Up</span><input id="nk-up" type="number" min="0" max="6" /><span>Down</span><input id="nk-down" type="number" min="0" max="6" /><span></span>
+          <span>Left</span><input id="nk-left" type="number" min="0" max="6" /><span>Right</span><input id="nk-right" type="number" min="0" max="6" /><span></span>
+          <span>Forward</span><input id="nk-forward" type="number" min="0" max="6" /><span>Back</span><input id="nk-back" type="number" min="0" max="6" /><span></span>
+        </div>
+        <label>Walls Range <input id="nk-walls" type="number" min="0" max="6" step="0.5" /></label>
+        <label>Delay (tick) <input id="nk-delay" type="number" min="0" max="40" /></label>
+        <label>Max Blocks Per Tick <input id="nk-max" type="number" min="1" max="10" /></label>
+        <label>Sort Mode <select id="nk-sort"><option value="closest">Closest</option><option value="furthest">Furthest</option><option value="top">Top</option></select></label>
+        <label class="check"><span>Only Suitable Tools</span><input id="nk-suit" type="checkbox" /></label>
+        <label class="check"><span>Rotate</span><input id="nk-rot" type="checkbox" /></label>
+        <label>List Mode <select id="nk-lmode"><option value="whitelist">Whitelist</option><option value="blacklist">Blacklist</option></select></label>
+        <label>Blocks (cách nhau dấu phẩy; whitelist để trống = mọi block) <input id="nk-list" placeholder="vd: stone, diamond_ore" autocomplete="off" /></label>
+        <div class="muted cell-file-hint">Tầm đào thực tế tối đa khoảng 5 block (giới hạn server). Packet Mine, Interact và Select Block Bind chưa hỗ trợ.</div>
+      </div>
+
+      <div id="am-areabox">
+      <div class="sub-title">Tọa độ di chuyển (đi một lượt mỗi lần bật)</div>
+      <div id="am-points" class="pts"></div>
+      <div class="row">
+        <button type="button" id="am-addpoint" class="btn ghost">+ Thêm tọa độ</button>
+        <button type="button" id="am-getpoint" class="btn ghost" title="Thêm tọa độ = vị trí hiện tại của bot">Lấy vị trí bot</button>
+      </div>
+
+      <div class="sub-title">Vùng đào (hình hộp, 2 tọa độ đối góc)</div>
+      <div class="box-grid">
+        <span>Góc 1</span><input id="am-x1" type="number" /><input id="am-y1" type="number" /><input id="am-z1" type="number" /><button type="button" id="am-pos1" class="btn ghost" title="Lấy vị trí bot làm góc 1">Lấy</button>
+        <span>Góc 2</span><input id="am-x2" type="number" /><input id="am-y2" type="number" /><input id="am-z2" type="number" /><button type="button" id="am-pos2" class="btn ghost" title="Lấy vị trí bot làm góc 2">Lấy</button>
+      </div>
+      <div class="muted cell-file-hint">Cột: X, Y, Z. Y là tọa độ block (bot đứng trên block thì lấy Y-1). Tối đa 64 x 64 block mỗi lớp.</div>
+      <label>Chỉ đào các block (cách nhau bằng dấu phẩy, để trống = mọi block) <input id="am-blocks" placeholder="vd: stone, iron_ore, diamond_ore" autocomplete="off" /></label>
+      </div>
+
+      <div class="sub-title">Autotrade dân làng (khi túi đầy)</div>
+      <label class="check"><span>Đi tới dân làng gần nhất, chuột phải và trade hết những gì trade được</span><input id="am-trade" type="checkbox" checked /></label>
+      <label>Tìm dân làng trong (block) <input id="am-tradeR" type="number" min="4" max="100" value="48" /></label>
+
+      <div class="sub-title">Cất đồ</div>
+      <label class="check"><span>Sau trade, ném toàn bộ item vào /pv (giữ lại mọi loại kiếm và cúp)</span><input id="am-pv" type="checkbox" checked /></label>
+      <label>Số /pv <input id="am-pvn" type="number" min="1" max="99" value="1" /></label>
+
+      <div id="am-msg" class="msg"></div>
+      <div class="modal-actions">
+        <button type="button" data-close="amine-modal" class="btn ghost">Hủy</button>
+        <button type="button" id="am-apply" class="btn primary">Áp dụng</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="cui-modal" class="modal hidden">
+    <div class="modal-card wide-card cui-card">
+      <h3>Click UI <span id="cui-win" class="muted"></span></h3>
+      <div class="muted cell-file-hint">Mở một rương / menu server / dân làng trong game, giao diện sẽ hiện lại cửa sổ đó. Click ô nào, bot click đúng ô đó. Chuột trái = click, chuột phải = click phải, Shift+click = shift-click.</div>
+      <div class="cui-bar">
+        <button type="button" id="cui-open-chest" class="btn ghost">Mở rương gần nhất</button>
+        <button type="button" id="cui-open-vil" class="btn ghost">Mở dân làng gần nhất</button>
+        <input id="cui-cmd" placeholder="/lệnh mở menu, vd: /pv 1" autocomplete="off" />
+        <button type="button" id="cui-send" class="btn ghost">Gửi lệnh</button>
+        <button type="button" id="cui-close-win" class="btn ghost">Đóng cửa sổ game</button>
+      </div>
+      <div class="cui-bar">
+        <label class="inline">Kiểu click
+          <select id="cui-how">
+            <option value="auto">Theo chuột (trái / phải / Shift)</option>
+            <option value="drop">Thả 1 (Q)</option>
+            <option value="dropall">Thả cả stack (Ctrl+Q)</option>
+            <option value="middle">Chuột giữa</option>
+          </select>
+        </label>
+      </div>
+      <div id="cui-empty" class="muted">Chưa có cửa sổ nào đang mở trong game.</div>
+      <div id="cui-body" class="hidden">
+        <div class="sub-title">Cửa sổ</div>
+        <div id="cui-top" class="cui-grid"></div>
+        <div id="cui-trades" class="cui-trades hidden"></div>
+        <div class="sub-title">Túi đồ của bot</div>
+        <div id="cui-inv" class="cui-grid"></div>
+        <div id="cui-hot" class="cui-grid"></div>
+      </div>
+      <div class="sub-title">Ghi hành động và phát lại</div>
+      <div class="cui-bar">
+        <button type="button" id="cui-rec" class="btn ghost">Bắt đầu ghi</button>
+        <button type="button" id="cui-recclear" class="btn ghost">Xóa bản ghi</button>
+        <span id="cui-steps" class="muted">0 bước</span>
+      </div>
+      <div class="cui-bar">
+        <label class="inline">Tốc độ
+          <select id="cui-speed">
+            <option value="1">x1</option><option value="1.2">x1.2</option><option value="1.5">x1.5</option><option value="1.8">x1.8</option><option value="2">x2.0</option>
+          </select>
+        </label>
+        <label class="inline">Lặp (0 = mãi mãi) <input id="cui-loops" type="number" min="0" max="9999" value="1" /></label>
+        <button type="button" id="cui-play" class="btn primary">Phát</button>
+        <button type="button" id="cui-stop" class="btn ghost">Dừng phát</button>
+      </div>
+      <div id="cui-list" class="cui-list"></div>
+      <div id="cui-msg" class="msg"></div>
+      <div class="modal-actions"><button type="button" data-close="cui-modal" class="btn ghost">Đóng</button></div>
+    </div>
+  </div>
+
+  <!-- Cài đặt Automine (bản cũ, đã ẩn) -->
+  <div id="mine-modal" class="modal hidden">
+    <div class="modal-card wide-card">
+      <h3>Cài đặt Automine</h3>
+      <label>Item cần đào <span class="muted">(ví dụ diamond, iron_ore)</span>
+        <input id="mine-target" placeholder="diamond" />
+      </label>
+      <div class="sub-title">Nhặt item (chức năng con của Automine)</div>
+      <label class="check"><span>Bật nhặt item rơi ra</span><input id="mine-pickup" type="checkbox" /></label>
+      <label>Tầm nhặt (block, 1–32) <input id="mine-range" type="number" min="1" max="32" value="8" /></label>
+      <div class="sub-title">Item được nhặt (tick nhiều item)</div>
+      <div id="mine-list" class="pick-list"></div>
+      <div class="row">
+        <input id="mine-custom" placeholder="Item khác, ví dụ emerald" class="grow" />
+        <button type="button" id="mine-add" class="btn ghost">Thêm</button>
+      </div>
+      <div id="mine-msg" class="msg"></div>
+      <div class="modal-actions">
+        <button type="button" data-close="mine-modal" class="btn ghost">Hủy</button>
+        <button type="button" id="mine-apply" class="btn primary">Áp dụng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hộp thoại giao diện: màu RGB và cầu vồng -->
+  <div id="theme-modal" class="modal hidden">
+    <div class="modal-card">
+      <h3>Giao diện</h3>
+      <div class="theme-preview"></div>
+      <div class="theme-row">
+        <span>Màu chính</span>
+        <input id="th-accent" type="color" value="#6ea8ff" />
+      </div>
+      <div class="theme-row">
+        <span>Màu phụ</span>
+        <input id="th-accent2" type="color" value="#b58cff" />
+      </div>
+      <div class="theme-row check">
+        <span>Cầu vồng (đổi màu liên tục)</span>
+        <input id="th-rainbow" type="checkbox" />
+      </div>
+      <div class="sub-title">Nền</div>
+      <div id="th-bg" class="bg-choices">
+        <button type="button" data-bg="default">Mặc định</button>
+        <button type="button" data-bg="dark">Tối</button>
+        <button type="button" data-bg="light">Sáng</button>
+        <button type="button" data-bg="blur">Mờ (trong suốt)</button>
+      </div>
+      <div id="th-glass-row" class="theme-row hidden">
+        <span>Độ trong suốt <b id="th-glass-val"></b></span>
+        <input id="th-glass" type="range" min="0" max="80" step="5" />
+      </div>
+      <div class="modal-actions">
+        <button id="th-reset" type="button" class="btn ghost">Mặc định</button>
+        <button id="th-close" type="button" class="btn primary">Xong</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hướng dẫn chi tiết từng chức năng -->
+  <div id="help-modal" class="modal hidden">
+    <div class="modal-card help-card">
+      <h3>Hướng dẫn chức năng</h3>
+      <p class="hint">Chọn một acc trước. Bấm trái để bật/tắt chức năng, bấm phải để mở cài đặt (nếu có).</p>
+      <div class="help-item"><h4>Sell spawner</h4>
+        <p>Bấm để bật/tắt. Bot tìm các spawner gần đó, mở UI, bỏ quái vật vào ô bán rồi đóng UI.</p>
+        <ul><li>Mỗi chu kỳ khoảng 3 phút, xong thì quay về vị trí ban đầu.</li></ul></div>
+      <div class="help-item"><h4>Autofarm</h4>
+        <p>Bấm để bật/tắt. Bot gửi lệnh <b>/autofarm</b> của server để bật hoặc tắt autofarm trên server.</p></div>
+      <div class="help-item"><h4>Automine</h4>
+        <p>Bấm trái: bật/tắt. Bấm phải: cài đặt item cần đào và phần Nhặt item.</p>
+        <ul><li>Item cần đào: ví dụ diamond, iron_ore.</li></ul></div>
+      <div class="help-item"><h4>Nhặt item (chức năng con của Automine)</h4>
+        <p>Nằm trong cài đặt Automine (chuột phải). Sau mỗi lần đào, bot nhặt item rơi ra.</p>
+        <ul>
+          <li>Chỉ nhặt các item đã tick trong danh sách.</li>
+          <li>Tầm nhặt từ 1 đến 32 block, mặc định 8.</li>
+        </ul></div>
+      <div class="help-item"><h4>Autoquest (nhiệm vụ Bò Mộng)</h4>
+        <p>Bấm trái: bật/tắt. Bấm phải: chọn độ khó (dễ hoặc thường) và số nhiệm vụ cần làm (1–10, mặc định 5).</p>
+        <ul>
+          <li>Bot mở /bomong, chọn len theo độ khó, làm nhiệm vụ rồi nhận thưởng.</li>
+          <li>Khi bị kick và vào lại, bot làm tiếp nhiệm vụ đang dở.</li>
+          <li>Nhiệm vụ đào dùng Automine. Nhiệm vụ diệt Enderman đi vào The End. Loại khác chưa hỗ trợ.</li>
+        </ul></div>
+      <div class="help-item"><h4>Fightbot</h4>
+        <p>Bấm trái: bật/tắt (hoặc gõ <b>!fightbot</b>). Bấm phải: cài đặt đối tượng, lọc tên, nhập tên từ file .txt.</p>
+        <ul>
+          <li>Khi bật: bot gửi <b>/warp tuonglai</b>, bật <b>/autoattack</b>, tự đi tới NPC player rồi đánh.</li>
+          <li>Nhặt <b>black_candle</b>, <b>gold_ingot</b> rơi ra; có gold_ingot thì cầm bấm chuột phải đến hết rồi cầm kiếm lại.</li>
+          <li>Chết thì <b>/back</b> rồi bật lại /autoattack.</li>
+          <li><b>!addfriend</b>: kết bạn NPC đang đánh (hoặc NPC gần nhất); <b>!addfriend tên</b> kết bạn theo tên. Lưu vĩnh viễn, mọi acc dùng chung. <b>!delfriend</b> bỏ kết bạn, <b>!friends</b> xem danh sách.</li>
+          <li>Nên tắt Automine, Autofarm, Autoquest, Sell spawner trước khi bật.</li>
+        </ul></div>
+      <div class="help-item"><h4>ESP (radar)</h4>
+        <p>Nút <b>ESP</b> mở radar nhìn từ trên xuống quanh bot. <b class="c-yellow">Vàng</b> = NPC chưa add (bị đánh), <b class="c-green">xanh</b> = bạn bè (không đánh).</p>
+        <ul><li>Bấm vào chấm hoặc nút ở danh sách để kết bạn / bỏ kết bạn nhanh.</li></ul></div>
+      <div class="help-item"><h4>Auto eat</h4>
+        <p>Bấm để bật/tắt. Mặc định TẮT.</p>
+        <ul>
+          <li>Chỉ ăn từ ô tay trái (offhand).</li>
+          <li>Khi độ no dưới 18/20 thì bot tự ăn.</li>
+        </ul></div>
+      <div class="help-item"><h4>Console</h4>
+        <p>Mở hoặc đóng khung log của acc đang chọn. Có thể gõ lệnh trực tiếp ở đây.</p></div>
+      <div class="help-item"><h4>Acc và proxy HTTP</h4>
+        <p>Thêm hoặc sửa acc. Proxy HTTP không bắt buộc, dạng <b>ip:port:user:pass</b>.</p>
+        <ul>
+          <li>Bấm <b>Dò proxy</b> để kiểm tra proxy có vào được server không.</li>
+          <li>Khi bấm Chạy, app tự dò proxy trước. Không vào được thì không mở bot.</li>
+        </ul></div>
+      <div class="help-item"><h4>Giao diện</h4>
+        <p>Chỉnh màu chính, màu phụ, cầu vồng và nền: Mặc định, Tối, Sáng, Mờ (trong suốt).</p>
+        <ul><li>Nền Mờ chỉ làm trong suốt các khung trong app, không làm trong suốt ra màn hình desktop.</li></ul></div>
+      <div class="help-item"><h4>Đăng nhập phần mềm</h4>
+        <p>Có thể ghi nhớ đăng nhập trong 24 giờ, không cần nhập lại.</p></div>
+      <div class="modal-actions">
+        <button type="button" data-close="help-modal" class="btn primary">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Radar ESP -->
+  <aside id="esp-panel" class="esp-panel hidden">
+    <div class="esp-head"><b>ESP</b><span id="esp-who" class="muted"></span><span class="spacer"></span><button id="esp-close" class="esp-x" title="Đóng">×</button></div>
+    <canvas id="esp-canvas" width="300" height="300"></canvas>
+    <div class="esp-legend"><span class="dot y"></span>Chưa add (bị đánh) <span class="dot g"></span>Bạn bè <span class="muted" id="esp-count"></span></div>
+    <div id="esp-list" class="esp-list"></div>
+  </aside>
+
+  <!-- Cảnh báo hết hạn: banner 5 phút và đếm ngược 5 giây -->
+  <div id="expiry-banner" class="expiry-banner hidden">⚠ <span id="expiry-text"></span></div>
+  <div id="expiry-overlay" class="expiry-overlay hidden">
+    <div class="expiry-box">
+      <div id="expiry-num" class="expiry-num"></div>
+      <div id="expiry-msg" class="expiry-msg"></div>
+    </div>
+  </div>
+
+  <script src="bridge-web.js"></script>
+<script src="app.js"></script>
+  <script src="fx.js"></script>
+<script src="extra.js"></script>
+<script src="mobile.js"></script>
+</body>
+</html>

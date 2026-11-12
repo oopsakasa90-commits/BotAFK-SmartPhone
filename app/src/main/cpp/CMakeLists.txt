@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.18.1)
+project("secretaf")
+set(LIBNODE ${CMAKE_SOURCE_DIR}/../../../libnode)
+include_directories(${LIBNODE}/include/node)
+add_library(node SHARED IMPORTED)
+set_target_properties(node PROPERTIES IMPORTED_LOCATION ${LIBNODE}/bin/${ANDROID_ABI}/libnode.so)
+add_library(native-lib SHARED native-lib.cpp)
+target_link_libraries(native-lib node log)
