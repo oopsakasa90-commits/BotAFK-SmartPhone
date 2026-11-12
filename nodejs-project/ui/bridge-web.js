@@ -20,8 +20,10 @@
     sendCommand: function (id, line) { return call('acc:cmd', id, line); },
     onAccounts: sub('accounts'), onEvent: sub('event'), onLicense: sub('license'), onExpiry: sub('expiry'), onAutoLogin: sub('autologin')
   };
+  var errCount = 0;
   function push(m) {
     if (!m || m.push === 'ping') return;
+    if (m.push === 'host-error') { errCount++; var d = document.getElementById('sa-diag-btn'); if (d) { d.style.background = '#e5484d'; d.textContent = '🛠 ' + errCount; } }
     if (m.push === 'fx') { if (window.__fxMsg) window.__fxMsg(m.data); }
     else if (m.push === 'fxevent') window.dispatchEvent(new CustomEvent(m.name, { detail: m.data }));
     else (subs[m.push] || []).forEach(function (f) { try { f(m.data); } catch (e) {} });
@@ -39,3 +41,20 @@
   };
   window.addEventListener('DOMContentLoaded', function () { setTimeout(function () { call('ready'); }, 60); });
 })();
+
+// Nút chẩn đoán (góc dưới trái): xem nhật ký lõi để biết vì sao acc dừng
+window.addEventListener('DOMContentLoaded', function () {
+  var btn = document.createElement('button');
+  btn.id = 'sa-diag-btn'; btn.textContent = '🛠';
+  btn.style.cssText = 'position:fixed;left:8px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:99998;width:38px;height:38px;border-radius:50%;border:0;background:rgba(80,90,130,.65);color:#fff;font-size:15px;opacity:.75';
+  var box = document.createElement('div');
+  box.style.cssText = 'display:none;position:fixed;inset:0;z-index:99999;background:#0b0f1a;color:#cfd6f5;flex-direction:column;padding:10px;padding-top:calc(10px + env(safe-area-inset-top))';
+  box.innerHTML = '<div style="display:flex;gap:8px;margin-bottom:8px"><b style="flex:1;align-self:center">Nhật ký lõi</b><button id="sa-d-ref">Làm mới</button><button id="sa-d-cp">Sao chép</button><button id="sa-d-x">Đóng</button></div><pre id="sa-d-pre" style="flex:1;overflow:auto;white-space:pre-wrap;word-break:break-all;font-size:11px;margin:0;background:#05070d;padding:8px;border-radius:8px"></pre>';
+  document.body.appendChild(btn); document.body.appendChild(box);
+  var pre = box.querySelector('#sa-d-pre');
+  function load() { fetch('/diag?k=' + encodeURIComponent(K)).then(function (r) { return r.text(); }).then(function (t) { pre.textContent = t || '(trống)'; pre.scrollTop = pre.scrollHeight; }); }
+  btn.onclick = function () { box.style.display = 'flex'; load(); };
+  box.querySelector('#sa-d-x').onclick = function () { box.style.display = 'none'; };
+  box.querySelector('#sa-d-ref').onclick = load;
+  box.querySelector('#sa-d-cp').onclick = function () { try { navigator.clipboard.writeText(pre.textContent); } catch (e) { var r = document.createRange(); r.selectNodeContents(pre); var s = getSelection(); s.removeAllRanges(); s.addRange(r); document.execCommand('copy'); } };
+});
