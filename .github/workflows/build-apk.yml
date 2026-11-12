@@ -22,6 +22,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: 8.9 }
       - run: gradle assembleDebug --no-daemon
+      - name: Kiểm tra lib trong APK
+        run: |
+          unzip -l app/build/outputs/apk/debug/*.apk | grep -E "lib/.*/(libnode|libc\+\+_shared|libnative-lib)\.so"
+          unzip -l app/build/outputs/apk/debug/*.apk | grep -q "lib/arm64-v8a/libc++_shared.so"
       - uses: actions/upload-artifact@v4
         with:
           name: Secret-AF-apk
