@@ -1,22 +1,4 @@
-plugins { id 'com.android.application'; id 'org.jetbrains.kotlin.android' }
-android {
-  namespace 'com.secretaf.app'
-  compileSdk 34
-  defaultConfig {
-    applicationId 'com.secretaf.app'
-    minSdk 24
-    targetSdk 34
-    versionCode 371
-    versionName '3.7.1'
-    ndk { abiFilters 'arm64-v8a', 'armeabi-v7a' }
-    externalNativeBuild { cmake { cppFlags '-std=c++17'; arguments '-DANDROID_STL=c++_shared' } }
-  }
-  externalNativeBuild { cmake { path 'src/main/cpp/CMakeLists.txt' } }
-  sourceSets { main { jniLibs.srcDirs = ['libnode/bin/'] } }
-  packagingOptions { jniLibs { useLegacyPackaging = true; pickFirsts += ['**/libc++_shared.so', '**/libnode.so'] } }
-  aaptOptions { noCompress 'zip' }
-  compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
-  kotlinOptions { jvmTarget = '17' }
-  buildTypes { release { minifyEnabled false } }
+plugins {
+  id 'com.android.application' version '8.5.2' apply false
+  id 'org.jetbrains.kotlin.android' version '1.9.24' apply false
 }
-dependencies { implementation 'androidx.core:core-ktx:1.13.1'; implementation 'androidx.appcompat:appcompat:1.7.0' }
