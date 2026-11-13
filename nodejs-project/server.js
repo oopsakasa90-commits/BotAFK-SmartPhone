@@ -24,10 +24,11 @@ dlog('Lõi khởi động: node ' + process.version + ' ' + process.platform + '
 // nodejs-mobile không có fork(): chạy runner.js bằng worker_threads, giả lập ChildProcess
 try {
   const cp = require('child_process'), EE = require('events'), { Worker } = require('worker_threads');
+  const WORKER_SRC = "'use strict';\n// Ch\u1ea1y runner.js trong worker_threads (nodejs-mobile kh\u00f4ng fork \u0111\u01b0\u1ee3c ti\u1ebfn tr\u00ecnh con)\nconst { parentPort, workerData } = require('worker_threads');\nprocess.send = (m) => { try { parentPort.postMessage(m); } catch (_) {} return true; };\nparentPort.on('message', (m) => { try { process.emit('message', m); } catch (e) { try { parentPort.postMessage({ type: 'log', text: 'L\u1ed7i worker: ' + e.message }); } catch (_) {} } });\nprocess.on('uncaughtException', (e) => { try { parentPort.postMessage({ type: 'log', text: 'L\u1ed7i runner: ' + (e && e.stack || e) }); } catch (_) {} });\nprocess.on('unhandledRejection', (e) => { try { parentPort.postMessage({ type: 'log', text: 'L\u1ed7i runner: ' + (e && e.stack || e) }); } catch (_) {} });\nrequire(workerData.runner);\n";
   let pidSeq = 90000;
   cp.fork = function (file, args, opts) {
     const ch = new EE(); ch.pid = ++pidSeq; ch.connected = true; ch.killed = false;
-    const w = new Worker(path.join(__dirname, 'runner-worker.js'), { workerData: { runner: String(file) }, resourceLimits: { maxOldGenerationSizeMb: 512 }, stdout: false, stderr: false });
+    const w = new Worker(WORKER_SRC, { eval: true, workerData: { runner: String(file) }, resourceLimits: { maxOldGenerationSizeMb: 512 }, stdout: false, stderr: false });
     w.on('message', (m) => ch.emit('message', m));
     w.on('error', (e) => { try { ch.emit('message', { type: 'log', text: 'Runner lỗi: ' + (e && e.stack || e) }); } catch (_) {} });
     w.on('exit', (c) => { ch.connected = false; ch.emit('exit', c, null); ch.emit('close', c, null); });
