@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="512" height="512">
+<defs>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fb2ff"/><stop offset="1" stop-color="#b58cff"/></linearGradient>
+<linearGradient id="g2" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#7fb2ff"/><stop offset="1" stop-color="#b58cff"/></linearGradient>
+<radialGradient id="ir" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#cfe0ff"/></radialGradient>
+</defs>
+<rect width="256" height="256" rx="56" fill="#0d1220"/>
+<g id="hand">
+<path d="M20 166 C14 146 34 134 56 140 C46 156 50 176 70 188 C44 192 26 182 20 166Z" fill="url(#g)"/>
+<path d="M44 130 C74 62 160 34 240 82 C160 62 92 90 64 140Z" fill="url(#g)"/>
+<path d="M72 138 C98 92 156 74 222 100 C160 88 116 108 90 152Z" fill="url(#g)"/>
+<path d="M98 150 C120 114 160 106 204 120 C164 118 134 132 112 164Z" fill="url(#g)"/>
+</g>
+<use href="#hand" transform="rotate(180 128 128)"/>
+<!-- con mắt ở giữa hai bàn tay -->
+<circle cx="128" cy="128" r="31" fill="#0d1220"/>
+<circle cx="128" cy="128" r="24" fill="none" stroke="url(#g)" stroke-width="7"/>
+<circle cx="128" cy="128" r="11" fill="url(#ir)"/>
+<circle cx="123" cy="123" r="3.5" fill="#0d1220" opacity=".7"/>
+</svg>

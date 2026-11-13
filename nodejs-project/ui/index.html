@@ -2,13 +2,10 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; media-src 'self' https://translate.google.com" />
   <title>Secret-AF</title>
   <link rel="stylesheet" href="style.css" />
-<link rel="stylesheet" href="mobile.css" />
-<meta name="theme-color" content="#0d1220" />
-<link rel="manifest" href="manifest.json" />
 </head>
 <body>
   <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -233,6 +230,7 @@
         <select id="fight-mode">
           <option value="server">/autoattack của server</option>
           <option value="aura">Aura / tự đánh của Fightbot</option>
+          <option value="v2">FightbotV2 (tự tìm NPC + tự đánh)</option>
         </select>
       </label>
       <div id="fight-modehint" class="muted cell-file-hint">Bot gửi /autoattack tới khi thấy "[Tự Đánh] Đã BẬT". Khi chết và /back (hoặc /warp) thì bật lại.</div>
@@ -510,10 +508,8 @@
     </div>
   </div>
 
-  <script src="bridge-web.js"></script>
-<script src="app.js"></script>
+  <script src="app.js"></script>
   <script src="fx.js"></script>
 <script src="extra.js"></script>
-<script src="mobile.js"></script>
 </body>
 </html>

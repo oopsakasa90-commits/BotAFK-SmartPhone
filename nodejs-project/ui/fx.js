@@ -501,7 +501,7 @@
         d.radius = num(r.radius, 8, 100, 48);
         d.warp = ["tuonglai", "halloween", "farmvip"].indexOf(r.warp) >= 0 ? r.warp : "tuonglai";
         d.warpCmd = String(r.warpCmd || "");
-        d.mode = r.mode === "aura" ? "aura" : r.mode === "server" ? "server" : r.serverAuto === false ? "aura" : "server";
+        d.mode = r.mode === "aura" || r.mode === "v2" ? r.mode : r.mode === "server" ? "server" : r.serverAuto === false ? "aura" : "server";
         d.cps = num(r.cps, 0.5, 20, 1.6);
         d.maxTargets = Math.round(num(r.maxTargets, 1, 3, 3));
         d.reach = num(r.reach, 1, 4, 4);
@@ -711,7 +711,7 @@
     ["tuonglai", "halloween", "farmvip"].forEach(function (k) {
       $("sec-" + k).classList.toggle("hidden", k !== w);
     });
-    var aura = $("fight-mode").value === "aura";
+    var aura = $("fight-mode").value !== "server";
     $("fight-aura").classList.toggle("hidden", !aura);
     $("fight-modehint").classList.toggle("hidden", aura);
     $("fight-warpcmd").placeholder = "/warp " + w + " (mặc định)";
@@ -839,7 +839,7 @@
     $("fight-apply").addEventListener("click", async function () {
       working.warp = $("fight-warp").value;
       working.warpCmd = $("fight-warpcmd").value.trim().slice(0, 60);
-      working.mode = $("fight-mode").value === "aura" ? "aura" : "server";
+      working.mode = ["aura", "v2"].indexOf($("fight-mode").value) >= 0 ? $("fight-mode").value : "server";
       working.cps = num($("fight-cps").value, 0.5, 20, 1.6);
       working.maxTargets = Math.round(num($("fight-targets").value, 1, 3, 3));
       working.reach = num($("fight-reach").value, 1, 4, 4);

@@ -7,9 +7,10 @@
   function save(k, v) { try { localStorage.setItem(KEY + k, JSON.stringify(v)); } catch (_) {} }
   var DEF = {
     am: { startOn: true, startCmds: [{ cmd: '/spawn', wait: 10 }], autoTool: true, repair: { on: true, pct: 5, cmd: '/fix hand', cd: 30 } },
-    fb: { autoDrop: { on: true, keep: ['player_head', 'gold_ingot'], ms: 350 }, useGold: true, useCandle: true, potara: { on: true, max: 40 }, repair: { on: true, pct: 5, cmd: '/repair', cd: 30 } }
+    fb: { v2: { scan: 150, crowd: true }, autoDrop: { on: true, keep: ['player_head', 'gold_ingot'], ms: 350 }, useGold: true, useCandle: true, potara: { on: true, max: 40 }, repair: { on: true, pct: 5, cmd: '/repair', cd: 30 } }
   };
   var X = { am: load('am', DEF.am), fb: load('fb', DEF.fb) };
+  if (!X.fb.v2) X.fb.v2 = Object.assign({}, DEF.fb.v2);
   window.__mergeSet = function (line, k) {
     var re = k === 'am' ? /^(!automine\s+set\s+)([\s\S]*)$/i : /^(!fightbot\s+set\s+)([\s\S]*)$/i, m = re.exec(line);
     if (!m) return line;
@@ -104,6 +105,9 @@
     nodes.push(el('div', 'muted', 'Item trong danh sách dưới đây KHÔNG bị thả (khóa ô bằng chuột giữa trong Click UI vẫn có tác dụng):'));
     var kw = el('div'), ki = el('input'); ki.value = f.autoDrop.keep.join(', '); ki.addEventListener('change', function () { f.autoDrop.keep = ki.value.split(',').map(function (x) { return x.trim(); }).filter(Boolean); save('fb', f); }); kw.appendChild(ki); nodes.push(kw);
     setTimeout(function () { picker(ki, ALL); }, 0);
+    nodes.push(section('FightbotV2 (chọn ở mục Chế độ đánh)'));
+    nodes.push(chk('Ưu tiên cụm NPC đông', f.v2.crowd, function (v) { f.v2.crowd = v; save('fb', f); }));
+    nodes.push(numF('Tầm quét (block)', f.v2.scan, 20, 300, function (v) { f.v2.scan = v; save('fb', f); }));
     nodes.push(section('Potara'));
     nodes.push(chk('Sau khi sang warp: gõ /potara tới khi hợp thể thành công', f.potara.on, function (v) { f.potara.on = v; save('fb', f); }));
     nodes.push(numF('Thử tối đa (lần)', f.potara.max, 1, 200, function (v) { f.potara.max = v; save('fb', f); }));
