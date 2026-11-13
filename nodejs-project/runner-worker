@@ -1,0 +1,8 @@
+'use strict';
+// Chạy runner.js trong worker_threads (nodejs-mobile không fork được tiến trình con)
+const { parentPort, workerData } = require('worker_threads');
+process.send = (m) => { try { parentPort.postMessage(m); } catch (_) {} return true; };
+parentPort.on('message', (m) => { try { process.emit('message', m); } catch (e) { try { parentPort.postMessage({ type: 'log', text: 'Lỗi worker: ' + e.message }); } catch (_) {} } });
+process.on('uncaughtException', (e) => { try { parentPort.postMessage({ type: 'log', text: 'Lỗi runner: ' + (e && e.stack || e) }); } catch (_) {} });
+process.on('unhandledRejection', (e) => { try { parentPort.postMessage({ type: 'log', text: 'Lỗi runner: ' + (e && e.stack || e) }); } catch (_) {} });
+require(workerData.runner);
