@@ -20,6 +20,24 @@ const _err = console.error.bind(console);
 console.error = (...a) => { dlog(a.map((x) => (typeof x === 'string' ? x : (x && x.stack) || JSON.stringify(x))).join(' ')); _err(...a); };
 process.on('exit', (c) => dlog('NODE THOAT code=' + c));
 dlog('Lõi khởi động: node ' + process.version + ' ' + process.platform + '/' + process.arch);
+
+// nodejs-mobile không có fork(): chạy runner.js bằng worker_threads, giả lập ChildProcess
+try {
+  const cp = require('child_process'), EE = require('events'), { Worker } = require('worker_threads');
+  let pidSeq = 90000;
+  cp.fork = function (file, args, opts) {
+    const ch = new EE(); ch.pid = ++pidSeq; ch.connected = true; ch.killed = false;
+    const w = new Worker(path.join(__dirname, 'runner-worker.js'), { workerData: { runner: String(file) }, resourceLimits: { maxOldGenerationSizeMb: 512 }, stdout: false, stderr: false });
+    w.on('message', (m) => ch.emit('message', m));
+    w.on('error', (e) => { try { ch.emit('message', { type: 'log', text: 'Runner lỗi: ' + (e && e.stack || e) }); } catch (_) {} });
+    w.on('exit', (c) => { ch.connected = false; ch.emit('exit', c, null); ch.emit('close', c, null); });
+    ch.send = (m) => { try { w.postMessage(m); return true; } catch (_) { return false; } };
+    ch.kill = () => { ch.killed = true; w.terminate(); return true; };
+    ch.disconnect = () => { ch.kill(); };
+    ch.unref = () => {}; ch.ref = () => {};
+    return ch;
+  };
+} catch (e) { console.log('fork shim lỗi', e.message); }
 const shim = require('./electron-shim');
 const { handlers, setPush, readyRes } = shim.__host;
 const origLoad = Module._load;
