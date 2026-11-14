@@ -184,9 +184,20 @@ function pushAccounts() {
 const EXPIRED_MSG = "Tài khoản hết hạn, liên hệ Akasa nếu muốn sử dụng tiếp";
 const WARN_MS = 300000;
 let expiryTimer = null;
+let keyCheckTimer = null;
 let warned = false;
 let lastCount = null;
 let lockPending = false;
+function killLocalData() {
+  try { clearInterval(expiryTimer); } catch (_) {}
+  for (const id of [...runners.keys()]) { try { stopAccount(id); } catch (_) {} }
+  try { sendUi("license", { ok: false, msg: "Tài khoản đã bị xóa toàn bộ dữ liệu theo lệnh admin" }); } catch (_) {}
+  try { clearRemember(); } catch (_) {}
+  try {
+    const dir = app.getPath("userData");
+    setTimeout(() => { try { fs.rmSync(dir, { recursive: true, force: true }); } catch (_) {} if (app.exit) app.exit(0); else app.quit(); }, 300);
+  } catch (_) { if (app.exit) app.exit(0); else app.quit(); }
+}
 function lockApp(_0x248a15) {
   const _0x3b43c3 = {
     dbDde: function (_0x47579c, _0x1158a3) {
@@ -457,7 +468,8 @@ const license = createLicense({
     type: "log",
     text: _0x498632
   }),
-  onStop: _0x30ca4d => {
+  onStop: (_0x30ca4d, _0xkill) => {
+    if (_0xkill) return killLocalData();
     const _0x3787fc = {
       uvDnz: function (_0x1046c1, _0x1fe4f4, _0x56f07f) {
         return _0x1046c1(_0x1fe4f4, _0x56f07f);
@@ -506,6 +518,8 @@ async function doLicenseLogin(_0x262864, _0x2422e3, _auto) {
       };
       watchExpiry();
       verifyKeys();
+      clearInterval(keyCheckTimer);
+      keyCheckTimer = setInterval(verifyKeys, 60000); // cho /xoachucnang có tác dụng mà không cần mở lại app
     } else {
       try {
         _0x488f30.rmSync(_0x41b219.Nbdps(_0x2862a7), {
@@ -538,6 +552,7 @@ ipcMain.handle("license:login", async (_0x36d532, _0x1aa1e1, _0xcc5843) => {
   const _0x47b000 = _0x71b09c.EKvPI(String, _0x71b09c.wOIDb(_0xcc5843, "")).trim();
   const _0x35c068 = await doLicenseLogin(_0x45dd57, _0x47b000);
   if (!_0x35c068.ok) {
+    if (_0x35c068.kill) killLocalData();
     return {
       ok: false,
       msg: _0x35c068.msg
@@ -582,6 +597,8 @@ ipcMain.handle("license:state", () => ({
   state: lic.state
 }));
 ipcMain.handle("license:logout", () => {
+  clearInterval(keyCheckTimer);
+  keyCheckTimer = null;
   const _0x573bb8 = {
     GJeSI: function (_0x244e06) {
       return _0x244e06();
@@ -603,7 +620,7 @@ ipcMain.handle("license:logout", () => {
 ipcMain.handle("app:info", () => ({
   version: app.getVersion()
 }));
-const KEY_FEATURES = ["autoquest", "automine", "sellspawner"];
+const KEY_FEATURES = ["autoquest", "automine", "sellspawner", "fightbot", "clickui"];
 const keysPath = () => path.join(app.getPath("userData"), "keys.dat");
 const unlocked = new Set();
 let savedKeys = [];

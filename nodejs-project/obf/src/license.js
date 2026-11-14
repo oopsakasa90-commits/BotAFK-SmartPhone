@@ -157,13 +157,13 @@ function createLicense({
     stopped: false,
     getStatus: () => ""
   };
-  function _0x58d4e0(_0x39e974) {
+  function _0x58d4e0(_0x39e974, _0x6b1fbd) {
     if (_0x4d0c5d.stopped) {
       return;
     }
     _0x4d0c5d.stopped = true;
     _0x449c45.ApHaf(clearInterval, _0x4d0c5d.timer);
-    _0x1e661d(_0x39e974);
+    _0x1e661d(_0x39e974, !!_0x6b1fbd);
   }
   async function _0x375b84() {
     if (_0x4d0c5d.stopped) {
@@ -195,7 +195,7 @@ function createLicense({
       }
       // chỉ dừng khi máy chủ trả lời dứt khoát (401/403: hết hạn, khóa, đổi máy, phiên sai); lỗi tạm thời coi như mất kết nối
       if (_0x8cb406.status === 403 || _0x8cb406.status === 401) {
-        return _0x449c45.QVGBF(_0x58d4e0, _0x8cb406.msg || _0x449c45.fUINd);
+        return _0x58d4e0(_0x8cb406.msg || _0x449c45.fUINd, _0x8cb406.kill);
       }
       throw new Error(_0x8cb406.msg || "phản hồi lạ " + _0x8cb406.status);
     } catch (_0x5a9414) {
@@ -225,7 +225,6 @@ function createLicense({
         pass: _0x5aa0d2,
         hwid: _0x7a22df,
         auto: !!_auto,
-        discordToken: process.env.BOTAFK_DISCORD_TOKEN || "",
         version: VERSION
       });
     } catch (_0xe4a034) {
@@ -238,7 +237,8 @@ function createLicense({
     if (!_0x13c549.ok) {
       return {
         ok: false,
-        msg: _0x13c549.msg || _0x449c45.xiabe
+        msg: _0x13c549.msg || _0x449c45.xiabe,
+        kill: !!_0x13c549.kill
       };
     }
     Object.assign(_0x4d0c5d, {

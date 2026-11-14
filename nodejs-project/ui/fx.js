@@ -2416,3 +2416,26 @@
     childList: true
   });
 })();
+// Khóa/ẩn theo key chức năng: chỉ áp dụng cho các nút ở thanh chức năng chính (Automine/Fightbot/Click UI)
+(function () {
+  function run() {
+    var api = window.botafk;
+    if (!api || !api.keyState) return;
+    var MAP = { mine: 'automine', fight: 'fightbot', cui: 'clickui' };
+    function apply(features) {
+      var set = new Set(features || []);
+      Object.keys(MAP).forEach(function (fx) {
+        var el = document.getElementById('fx-' + fx);
+        if (el) el.hidden = !set.has(MAP[fx]);
+      });
+    }
+    api.keyState().then(function (s) { apply(s && s.features); }).catch(function () {});
+    if (api.onEvent) {
+      api.onEvent(function (ev) {
+        if (ev && ev.type === 'keys') apply(ev.features);
+      });
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
