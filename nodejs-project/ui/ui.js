@@ -510,7 +510,7 @@
         d.useGold = r.useGold !== false;
         d.useCandle = r.useCandle !== false;
         d.swordFallback = r.swordFallback !== false;
-        d.goldCps = num(r.goldCps, 1, 25, 5);
+        d.goldCps = num(r.goldCps, 0.1, 1000, 5);
         if (Array.isArray(r.points)) {
           d.points = r.points.map(function (p) {
             return {
@@ -836,13 +836,13 @@
       working.warpCmd = $("fight-warpcmd").value.trim().slice(0, 60);
       working.warpDelay = Math.max(0, Math.min(600, Math.round(Number($("fight-warpdelay").value) || 0)));
       working.mode = $("fight-mode").value === "aura" ? "aura" : "server";
-      working.cps = num($("fight-cps").value, 0.5, 20, 1.6);
+      working.cps = num($("fight-cps").value, 0.1, 1000, 1.6);
       working.maxTargets = Math.round(num($("fight-targets").value, 1, 3, 3));
       working.reach = num($("fight-reach").value, 1, 4, 4);
       working.useGold = $("fight-gold").checked;
       working.useCandle = $("fight-candle").checked;
       working.swordFallback = $("fight-sword").checked;
-      working.goldCps = num($("fight-gcps").value, 1, 25, 5);
+      working.goldCps = num($("fight-gcps").value, 0.1, 1000, 5);
       working.scope = "all";
       working.radius = num($("fight-radius").value, 8, 100, 48);
       working.pointRadius = num($("fight-pradius").value, 1, 5, 5);

@@ -2,13 +2,10 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
-  <meta name="theme-color" content="#0d1220" />
-  <link rel="manifest" href="manifest.json" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; media-src 'self' https://translate.google.com" />
   <title>Secret-AF</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="mobile.css" />
   </head>
 <body>
   <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -211,7 +208,7 @@
           </label>
           <div id="fight-modehint" class="muted cell-file-hint">Bot gửi /autoattack tới khi thấy "[Tự Đánh] Đã BẬT". Khi chết và warp lại thì bật lại.</div>
           <div id="fight-aura" class="fight-sec hidden">
-            <label>CPS (0.5–20, mặc định 1.6 = tốc đánh vanilla) <input id="fight-cps" type="number" min="0.5" max="20" step="0.1" value="1.6" /></label>
+            <label>CPS (không giới hạn; tự dao động ±5–20% như người) <input id="fight-cps" type="number" min="0.1" max="1000" step="0.1" value="1.6" /></label>
             <label>Số mục tiêu cùng lúc (1–3) <input id="fight-targets" type="number" min="1" max="3" value="3" /></label>
             <label>Tầm đánh (1–4 block) <input id="fight-reach" type="number" min="1" max="4" step="0.1" value="4" /></label>
             <div class="muted cell-file-hint">Đầu bot xoay mượt theo mục tiêu, mỗi tick 50ms (đồng bộ 20 TPS), nhìn rồi mới đánh ở tick kế tiếp để tránh bị kick.</div>
@@ -224,7 +221,7 @@
         <div class="fbody">
           <label class="check"><span>Dùng gold_ingot (chuột phải liên tục)</span><input id="fight-gold" type="checkbox" checked /></label>
           <label class="check"><span>Dùng nến (candle, mọi màu)</span><input id="fight-candle" type="checkbox" checked /></label>
-          <label>CPS chuột phải (1–25) <input id="fight-gcps" type="number" min="1" max="25" value="5" /></label>
+          <label>CPS chuột phải (không giới hạn) <input id="fight-gcps" type="number" min="0.1" max="1000" value="5" /></label>
           <label class="check"><span>Khi hết vàng và nến thì chuyển sang cầm kiếm</span><input id="fight-sword" type="checkbox" checked /></label>
         </div>
       </details>
@@ -492,9 +489,7 @@
     </div>
   </div>
 
-  <script src="bridge-web.js"></script>
   <script src="app.js"></script>
   <script src="ui.js"></script>
-  <script src="mobile.js"></script>
 </body>
 </html>
