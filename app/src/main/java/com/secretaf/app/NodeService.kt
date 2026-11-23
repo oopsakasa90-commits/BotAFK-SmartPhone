@@ -87,7 +87,7 @@ class NodeService : Service() {
             }
             val data = File(getExternalFilesDir(null) ?: filesDir, "data").apply { mkdirs() }
             System.loadLibrary("node"); System.loadLibrary("native-lib")
-            startNodeWithArguments(arrayOf("node", File(root, "server.js").absolutePath, "--data", data.absolutePath, "--port", NodeState.port.toString(), "--key", NodeState.key))
+            startNodeWithArguments(arrayOf("node", "--max-old-space-size=160", "--max-semi-space-size=2", File(root, "server.js").absolutePath, "--data", data.absolutePath, "--port", NodeState.port.toString(), "--key", NodeState.key))
         } catch (t: Throwable) { NodeState.error = t.toString() }
     }
 

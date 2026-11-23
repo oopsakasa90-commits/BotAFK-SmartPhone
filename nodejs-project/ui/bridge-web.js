@@ -10,8 +10,8 @@
   }
   function sub(n) { return function (cb) { subs[n].push(cb); }; }
   window.botafk = {
-    licenseLogin: function (u, p) { return call('license:login', u, p); }, licenseState: function () { return call('license:state'); },
-    logout: function () { return call('license:logout'); }, appInfo: function () { return call('app:info'); },
+    licenseLogin: function (u, p) { return call('license:login', u, p).then(function (r) { try { if (r && r.ok && window.AndroidApp) AndroidApp.saveCred(String(u), String(p)); } catch (e) {} return r; }); }, licenseState: function () { return call('license:state'); },
+    logout: function () { try { if (window.AndroidApp) AndroidApp.clearCred(); } catch (e) {} return call('license:logout'); }, appInfo: function () { return call('app:info'); },
     updateCheck: function () { return call('update:check'); }, updateInstall: function () { return call('update:install'); },
     keyState: function () { return call('key:state'); }, keyActivate: function (k) { return call('key:activate', k); },
     listAccounts: function () { return call('acc:list'); }, saveAccount: function (a) { return call('acc:save', a); },
@@ -40,6 +40,19 @@
     return ol.apply(console, arguments);
   };
   window.addEventListener('DOMContentLoaded', function () { setTimeout(function () { call('ready'); }, 60); });
+  // Nhớ tài khoản: lần mở sau tự đăng nhập (mật khẩu lưu mã hóa bằng Android Keystore)
+  window.addEventListener('DOMContentLoaded', function () {
+    var c = null; try { c = window.AndroidApp && JSON.parse(AndroidApp.loadCred() || 'null'); } catch (e) {}
+    if (!c || !c.u) return;
+    var tries = 0;
+    (function attempt() {
+      var login = document.getElementById('login'), u = document.getElementById('lic-user'), p = document.getElementById('lic-pass'), f = document.getElementById('login-form');
+      if (!login || login.classList.contains('hidden')) return; // đã vào được (lõi tự đăng nhập)
+      if (++tries > 6) return;
+      if (u && p && f) { u.value = c.u; p.value = c.p; var m = document.getElementById('login-msg'); if (m) m.textContent = 'Đang tự đăng nhập…'; try { f.requestSubmit(); } catch (e) {} }
+      setTimeout(attempt, 3500);
+    })();
+  });
 })();
 
 // Nút chẩn đoán (góc dưới trái): xem nhật ký lõi để biết vì sao acc dừng

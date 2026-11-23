@@ -51,3 +51,9 @@
 }
 @media (prefers-reduced-motion: reduce) { * { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 .m-nav .v3-n.on { border-radius: 16px !important; margin: 6px 8px; min-height: 44px; }
+
+/* Chế độ nhẹ: tắt hiệu ứng nền tốn CPU/pin/RAM (hạt, cực quang, glow); máy RAM thấp thì bỏ luôn blur */
+html.m-perf #fx-bg, html.m-perf .aurora, html.m-perf #v3-glow, html.m-perf body::after { display: none !important; }
+html.m-perf *, html.m-perf *::before, html.m-perf *::after { animation: none !important; }
+html.m-lowmem *, html.m-lowmem *::before, html.m-lowmem *::after { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+html.m-lowmem .v3-top, html.m-lowmem .v3-card, html.m-lowmem .v3-stat, html.m-lowmem .v3-acc, html.m-lowmem .modal-card { background: color-mix(in srgb, var(--panel) 80%, transparent) !important; }

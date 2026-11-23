@@ -2,6 +2,10 @@
 // Secret-AF Android: (1) dựng bố cục điện thoại: dải acc phía trên + thanh điều hướng phía dưới
 //                    (2) cảm ứng: nhấn giữ = chuột phải (mở cài đặt chức năng)
 (function () {
+  var H = document.documentElement; H.classList.add('m-perf');
+  if ((navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)) H.classList.add('m-lowmem');
+  // ẩn tab/vào nền: dừng mọi hoạt động giao diện (bot vẫn chạy trong lõi)
+  document.addEventListener('visibilitychange', function () { H.classList.toggle('m-hidden', document.hidden); });
   function narrow() { return window.matchMedia('(max-width: 860px), (pointer: coarse) and (max-width: 1100px)').matches; }
   function build() {
     if (!narrow()) return true;

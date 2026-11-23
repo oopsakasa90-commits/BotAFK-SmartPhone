@@ -28,7 +28,7 @@ try {
   let pidSeq = 90000;
   cp.fork = function (file, args, opts) {
     const ch = new EE(); ch.pid = ++pidSeq; ch.connected = true; ch.killed = false;
-    const w = new Worker(WORKER_SRC, { eval: true, workerData: { runner: String(file) }, resourceLimits: { maxOldGenerationSizeMb: 512 }, stdout: false, stderr: false });
+    const w = new Worker(WORKER_SRC, { eval: true, workerData: { runner: String(file) }, resourceLimits: { maxOldGenerationSizeMb: 192, maxYoungGenerationSizeMb: 24 }, stdout: false, stderr: false });
     w.on('message', (m) => ch.emit('message', m));
     w.on('error', (e) => { try { ch.emit('message', { type: 'log', text: 'Runner lỗi: ' + (e && e.stack || e) }); } catch (_) {} });
     w.on('exit', (c) => { ch.connected = false; ch.emit('exit', c, null); ch.emit('close', c, null); });

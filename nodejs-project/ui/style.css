@@ -568,7 +568,7 @@ html.liquid-lite .screen, html.liquid-lite #login, html.liquid-lite main, html.l
 .console-panel.fx-locked { position: relative; }
 .console-panel.fx-locked #logs { visibility: hidden; }
 .console-panel.fx-locked::after { content: "Console và chat bị khóa: chỉ mở khi máy chủ gửi chức năng"; position: absolute; left: 0; right: 0; top: 46%; text-align: center; color: var(--muted); font-size: 13px; pointer-events: none; }
-html.fx-feat-locked .fn:not([data-fn="help"]):not([data-fn="console"]), html.fx-feat-locked .fx-fn { opacity: .4; pointer-events: none; filter: grayscale(.6); }
+html.fx-feat-locked .fn:not([data-fn="help"]):not([data-fn="console"]), html.fx-feat-locked .fx-fn { display: none !important; } /* chưa có code từ máy chủ: ẩn hẳn */
 
 /* ======== Secret-AF: giao diện mới ======== */
 [hidden]{display:none!important}
