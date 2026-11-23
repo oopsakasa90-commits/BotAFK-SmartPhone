@@ -1,30 +1,53 @@
-/* Bố cục điện thoại (màn hình hẹp) */
-@media (max-width: 820px), (pointer: coarse) and (max-width: 1100px) {
-  html, body { height: 100%; overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
-  *, *::before, *::after { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
-  .screen { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
-  .topbar { padding: 8px 10px !important; gap: 6px !important; flex-wrap: nowrap; overflow-x: auto; }
-  .topbar .lic-info, .btn.logout { font-size: 12px; }
-  .topbar .lic-info { display: none; }
-  #btn-add { white-space: nowrap; padding: 8px 12px; }
-  .body { flex-direction: column !important; min-height: 0; }
-  .sidebar { width: 100% !important; flex: 0 0 auto !important; flex-direction: row !important; padding: 8px !important; gap: 8px !important; border-right: 0 !important; border-bottom: 1px solid var(--line); overflow-x: auto; overflow-y: hidden; animation: none !important; }
-  .side-title, .side-empty { display: none !important; }
-  .side-buttons { display: flex !important; flex-direction: row !important; gap: 8px !important; flex-wrap: nowrap; }
-  .side-buttons.hidden { display: none !important; }
-  .fn, .fx-fn { white-space: nowrap; min-height: 44px; padding: 0 16px !important; }
-  .fn:hover, .fx-fn:hover { transform: none !important; }
-  .main-area { min-height: 0; flex: 1; display: flex; flex-direction: column; }
-  .content { padding: 10px !important; }
+/* Secret-AF Android: bố cục điện thoại cho giao diện v3 (thanh dưới + dải acc + kính nhẹ) */
+@media (max-width: 860px), (pointer: coarse) and (max-width: 1100px) {
+  html, body { height: 100%; overflow: hidden; overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
+  body { font-size: 14px; }
+  /* kính nhẹ: blur nhỏ để máy yếu không giật, vẫn nhìn xuyên thấy ảnh nền */
+  html:not(#x) .v3-top, html:not(#x) .v3-card, html:not(#x) .v3-stat, html:not(#x) .v3-acc,
+  html:not(#x) .modal-card, html:not(#x) .esp-panel, html:not(#x) .console-panel, html:not(#x) #console-panel {
+    -webkit-backdrop-filter: blur(10px) saturate(1.4) !important; backdrop-filter: blur(10px) saturate(1.4) !important;
+  }
+  html:not(#x) .v3-tcard, html:not(#x) button.fn, html:not(#x) .fx-fn, html:not(#x) input, html:not(#x) select, html:not(#x) textarea,
+  html:not(#x) .btn.ghost, html:not(#x) .lic-info, html:not(#x) .v3-badge { -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+  .v3 { display: flex !important; flex-direction: column; height: 100dvh; padding-top: env(safe-area-inset-top); grid-template-columns: none !important; }
+  .v3-side { display: none !important; }
+  .m-strip { order: 1; flex: 0 0 auto; display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  .m-strip .v3-accs { display: flex !important; flex-direction: row !important; gap: 8px; flex: 1 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  .m-strip .v3-accs::-webkit-scrollbar { display: none; }
+  .m-strip .v3-acc { flex: 0 0 auto; min-width: 150px; }
+  .m-strip .v3-noacc { white-space: nowrap; font-size: 12px; align-self: center; margin: 0; }
+  .m-strip #v3-addslot { flex: 0 0 auto; }
+  .m-strip #btn-add { white-space: nowrap; min-height: 40px; padding: 0 14px; }
+  .v3-main { order: 2; flex: 1 1 auto; min-height: 0; overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .m-nav { order: 3; flex: 0 0 auto; display: flex !important; flex-direction: row !important; gap: 0 !important; padding: 0 0 env(safe-area-inset-bottom) 0 !important; border-top: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 70%, transparent); }
+  .m-nav .v3-n { flex: 1 1 0; flex-direction: column; justify-content: center; align-items: center; gap: 3px; min-height: 56px; padding: 6px 0 !important; font-size: 11px; border-radius: 0 !important; }
+  .m-nav .v3-n svg { width: 22px; height: 22px; }
+
+  .v3-top { padding: 10px 14px !important; gap: 8px; flex-wrap: wrap; }
+  .v3-top h1 { font-size: 16px; }
+  .v3-top p { display: none; }
+  .v3-topr { gap: 6px !important; flex-wrap: wrap; justify-content: flex-end; }
+  .v3-topr .lic-info { display: none; }
+  .v3-topr .btn, .v3-topr button { min-height: 36px; font-size: 12px; padding: 0 10px; }
+  .v3-page { padding: 10px !important; gap: 10px !important; }
+  .v3-stats { grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; }
+  .v3-stat { padding: 10px 12px !important; }
+  .v3-stat small { font-size: 10px; }
+  .v3-stat b { font-size: 17px !important; margin-top: 4px !important; }
+  .v3-card { padding: 14px !important; }
+  .fn, .fx-fn { min-height: 56px; }
   .cards { grid-template-columns: 1fr !important; }
-  .console-panel { height: 46vh !important; min-height: 200px; }
-  .cmd-form { padding: 8px; }
-  .cmd-form input, input, select, textarea { font-size: 16px !important; } /* tránh iOS/Chrome tự phóng to */
+  .console-panel, #console-panel { min-height: 240px; }
+  .cmd-form input, input, select, textarea { font-size: 16px !important; } /* chống tự phóng to khi chạm ô nhập */
   .btn { min-height: 44px; }
   .modal-card, .wide-card { width: 100vw !important; max-width: 100vw !important; height: 100% !important; max-height: 100% !important; border-radius: 0 !important; overflow-y: auto; }
   .login-card { width: 92vw !important; }
   .box-grid { grid-template-columns: repeat(3, 1fr) auto !important; }
   .cui-grid .cui-slot { height: 48px !important; min-height: 48px !important; }
   #cui-tip { max-width: 80vw; }
+  .esp-panel { width: 100vw !important; max-width: 100vw !important; left: 0 !important; right: 0 !important; }
+  #sa-diag-btn { bottom: calc(72px + env(safe-area-inset-bottom)) !important; opacity: .55; }
 }
-.brand{white-space:nowrap}
+@media (prefers-reduced-motion: reduce) { * { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+.m-nav .v3-n.on { border-radius: 16px !important; margin: 6px 8px; min-height: 44px; }

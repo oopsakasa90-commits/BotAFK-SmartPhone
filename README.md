@@ -1,15 +1,18 @@
-# Secret-AF cho Android (APK, chạy trực tiếp trên điện thoại, không cần VPS)
-Kiến trúc: app Android = WebView + dịch vụ nền (foreground service) chạy Node.js (nodejs-mobile) với đúng lõi BotAFK/Secret-AF trên PC.
-Giao diện là bản PC, có bố cục điện thoại (`ui/mobile.css`). Nhấn giữ nút chức năng = chuột phải (cài đặt).
+# Secret-AF cho Android
 
-## Build không cần Android Studio (GitHub Actions)
-1. Tạo repo GitHub (private), đẩy toàn bộ thư mục này lên nhánh `main`.
-2. Tab Actions -> `build-apk` -> Run workflow (hoặc tự chạy khi push).
-3. Chạy xong, tải artifact `Secret-AF-apk` -> giải nén ra `app-debug.apk`, chép vào điện thoại và cài (cho phép "cài từ nguồn không rõ").
+APK cài trực tiếp trên điện thoại. Giao diện giống bản PC (kính mờ, thanh bên → thanh điều hướng dưới), bot chạy ngay trên máy qua lõi Node.js.
 
-## Lần đầu mở app
-- Cho phép thông báo và "không tối ưu pin" (bắt buộc để Android không giết bot khi tắt màn hình).
-- Đợi 10-60 giây lần đầu (giải nén lõi). Lần sau mở nhanh.
-- Back = chạy nền. Dừng hẳn: nút "Dừng hẳn" trong thông báo.
-- Dữ liệu acc nằm ở: Android/data/com.secretaf.app/files/data (gỡ app sẽ mất).
-- Một số hãng (Xiaomi, Oppo, Vivo, Samsung) còn có "tự khởi động / chạy nền" riêng: bật cho Secret-AF.
+## Cài đặt
+Tải `Secret-AF.apk` ở mục **Releases → apk-latest** (hoặc artifact của lần build mới nhất), cài và cho phép "cài từ nguồn không rõ". Cập nhật: cài đè, dữ liệu acc được giữ.
+
+## Chạy nền, không bị đóng băng
+- Dịch vụ foreground + WakeLock + WifiLock: chạy tiếp khi tắt màn hình và khi **vuốt app khỏi đa nhiệm**.
+- Lần đầu app hỏi "không tối ưu pin" (bắt buộc) và mở cài đặt "tự khởi động" riêng của Xiaomi/Oppo/Realme/Vivo/Huawei/Samsung.
+- Báo thức canh gác 10 phút/lần và tự bật lại sau khi mở máy / cập nhật app.
+- Dừng hẳn: nút **Dừng hẳn** trên thông báo.
+
+## Nhẹ
+Chỉ arm64, R8 + shrinkResources, kính mờ blur nhỏ, không dịch vụ thừa.
+
+## Cấu trúc
+`app/` vỏ Android (Kotlin + nodejs-mobile) · `nodejs-project/` lõi Node + giao diện `ui/` · `tools/` script build + keystore · build bằng GitHub Actions `build-apk`.

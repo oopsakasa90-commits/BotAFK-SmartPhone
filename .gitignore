@@ -1,0 +1,8 @@
+app/libnode/
+app/build/
+app/src/main/assets/nodejs-project.zip
+nodejs-project/node_modules/
+.gradle/
+build/
+local.properties
+*.apk

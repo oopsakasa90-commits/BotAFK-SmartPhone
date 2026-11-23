@@ -66,7 +66,6 @@
     BWvAU: " selected",
     rPkcB: "sub",
     hIgXl: "Sell",
-    GDNlL: "Autofarm",
     gfdjy: "Automine",
     eYdLb: "Quest",
     Nappk: "autoeat",
@@ -159,7 +158,6 @@
     EOxNt: function (_0x34b77b, _0x2a2f65) {
       return _0x34b77b === _0x2a2f65;
     },
-    WlsDq: "autofarm",
     uAEer: function (_0x35582b, _0xa7ab58) {
       return _0x35582b === _0xa7ab58;
     },
@@ -607,7 +605,9 @@
   const _0x3a6def = {
     sellspawner: _0x2a1f19.DRUBZ,
     automine: _0x2a1f19.gfdjy,
-    autoquest: _0x2a1f19.teRuN
+    autoquest: _0x2a1f19.teRuN,
+    fightbot: "Fightbot",
+    clickui: "Click UI"
   };
   const _0x4170ae = {
     sell: _0x2a1f19.HdwBl,
@@ -632,7 +632,6 @@
     reconnecting: _0x2a1f19.NmvgG,
     online: "Đang chạy",
     sellspawner: _0x2a1f19.DRUBZ,
-    autofarm: _0x2a1f19.GDNlL,
     automine: _0x2a1f19.gfdjy,
     offline: _0x2a1f19.zJaEI,
     wrongpass: _0x2a1f19.piGKr
@@ -743,7 +742,7 @@
       const _0x236fbe = document.createElement(_0x2a1f19.KVlCA);
       _0x236fbe.className = "features";
       const _0x2225b3 = _0x2a1f19.PMKPc(_0x34f307, _0x35d539);
-      for (const [_0x4d078e, _0x4da2ac] of [["seller", _0x2a1f19.hIgXl], ["autofarm", _0x2a1f19.GDNlL], ["automine", _0x2a1f19.gfdjy], ["autoquest", _0x2a1f19.eYdLb], [_0x2a1f19.Nappk, "Ăn"]]) {
+      for (const [_0x4d078e, _0x4da2ac] of [["seller", _0x2a1f19.hIgXl], ["autofarm", "Autofarm"], ["automine", _0x2a1f19.gfdjy], ["autoquest", _0x2a1f19.eYdLb], [_0x2a1f19.Nappk, "Ăn"]]) {
         const _0x253521 = document.createElement("span");
         _0x253521.className = _0x2a1f19.OjPJn(_0x2a1f19.cmvZZ, _0x2225b3[_0x4d078e] ? _0x2a1f19.vINgE : "");
         _0x253521.textContent = _0x4da2ac;
@@ -768,7 +767,6 @@
       const _0x15ae04 = _0x2dbcd4.features || {};
       return {
         seller: !!_0x15ae04.seller,
-        autofarm: !!_0x15ae04.autofarm,
         automine: !!_0x2dbcd4.mine && !!_0x2dbcd4.mine.on || !!_0x15ae04.automine,
         autoquest: !!_0x2dbcd4.quest && !!_0x2dbcd4.quest.on || !!_0x15ae04.autoquest,
         autoeat: !!_0x15ae04.autoeat
@@ -878,7 +876,6 @@
     const _0xb119be = _0x2a1f19.oxkVn(_0x34f307, _0x20f069);
     const _0xc053ed = {
       sell: _0xb119be.seller,
-      autofarm: _0xb119be.autofarm,
       automine: _0xb119be.automine,
       autoquest: _0xb119be.autoquest,
       autoeat: _0xb119be.autoeat,
@@ -924,7 +921,7 @@
       }
       _0x237e10.scrollTop = _0x237e10.scrollHeight;
     } else {
-      const _0x45adda = _0x675a15.unlocked.map(_0x7d8fdf => _0x3a6def[_0x7d8fdf]).join(", ");
+      const _0x45adda = _0x675a15.unlocked.map(_0x7d8fdf => _0x3a6def[_0x7d8fdf]).filter(Boolean).join(", ");
       const _0x376af0 = _0x2a1f19.oxkVn(_0x766b88, _0x2a1f19.PKDKn);
       _0x376af0.textContent = _0x45adda ? "Đã mở: " + _0x45adda : _0x2a1f19.hisDV;
       _0x376af0.style.color = "";
@@ -947,9 +944,6 @@
     }
     if (_0x2a1f19.YqoqX(_0x286adc, _0x2a1f19.VFzfS)) {
       return _0x2d6665(_0x2a1f19.rZtqn);
-    }
-    if (_0x2a1f19.EOxNt(_0x286adc, _0x2a1f19.WlsDq)) {
-      return _0x2d6665("!autofarm toggle");
     }
     if (_0x2a1f19.uAEer(_0x286adc, "automine")) {
       return _0x2a1f19.qgYlG(_0x2d6665, _0x2a1f19.kSklK);
@@ -1275,7 +1269,6 @@
     _0x11405b.addEventListener(_0x2a1f19.vOppW, () => _0x766b88("#" + _0x11405b.dataset.close).classList.add("hidden"));
   });
   _0x766b88("#mine-apply").addEventListener(_0x2a1f19.vOppW, _0x36302c);
-  _0x2a1f19.SRjWN(_0x766b88, "#q-apply").addEventListener("click", _0xbe95d4);
   _0x2a1f19.fLUrv(_0x766b88, _0x2a1f19.heMZZ).addEventListener(_0x2a1f19.vOppW, async () => {
     const _0x5e0893 = _0x2a1f19.yQlGM.split("|");
     let _0x86ae85 = 0;
@@ -1405,7 +1398,6 @@
       const _0x385588 = _0x3e589b(_0x30f5bb);
       const _0x633ee2 = {
         sell: _0x385588.seller,
-        autofarm: _0x385588.autofarm,
         automine: _0x385588.automine,
         autoquest: _0x385588.autoquest,
         autoeat: _0x385588.autoeat,
@@ -1566,7 +1558,7 @@
       const _0x5df7b4 = _0x2ce067.createElement(_0x2a1f19.KVlCA);
       _0x5df7b4.className = "features";
       const _0x139e08 = _0x5613b3(_0x144298);
-      for (const [_0x1eb636, _0x470391] of [[_0x2a1f19.aUlpO, _0x2a1f19.hIgXl], [_0x2a1f19.WlsDq, _0x2a1f19.GDNlL], [_0x2a1f19.OWvWh, _0x2a1f19.gfdjy], ["autoquest", "Quest"], [_0x2a1f19.Nappk, "Ăn"]]) {
+      for (const [_0x1eb636, _0x470391] of [[_0x2a1f19.aUlpO, _0x2a1f19.hIgXl], [_0x2a1f19.OWvWh, _0x2a1f19.gfdjy], ["autoquest", "Quest"], [_0x2a1f19.Nappk, "Ăn"]]) {
         const _0x1ee6b8 = _0x159cc2.createElement(_0x2a1f19.fEohA);
         _0x1ee6b8.className = _0x2a1f19.lnfRc(_0x2a1f19.cmvZZ, _0x139e08[_0x1eb636] ? _0x2a1f19.vINgE : "");
         _0x1ee6b8.textContent = _0x470391;
